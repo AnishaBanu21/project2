@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather Forecast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to top, #87CEEB, #fff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .weather-app {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 300px;
+    }
+
+    input {
+      padding: 8px;
+      width: 80%;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #1E90FF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .weather-result {
+      margin-top: 20px;
+    }
+
+    .temperature {
+      font-size: 32px;
+    }
+
+    .description {
+      color: #555;
+    }
+
+    .city {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="weather-app">
+  <h2>Weather Forecast</h2>
+  <input type="text" id="cityInput" placeholder="Enter city name">
+  <button onclick="getWeather()">Get Weather</button>
+
+  <div class="weather-result" id="result"></div>
+</div>
+
+<script>
+  const apiKey = "cdf1dfdb0aa8fe2acfd240dca3c6b1f8"; // Replace with your OpenWeatherMap API key
+
+  function getWeather() {
+    const city = document.getElementById("cityInput").value;
+    const result = document.getElementById("result");
+
+    if (!city) {
+      result.innerHTML = "Please enter a city name.";
+      return;
+    }
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("City not found");
+        }
+        return response.json();
+      })
+      .then(data => {
+        const temp = data.main.temp;
+        const desc = data.weather[0].description;
+        const name = data.name;
+        result.innerHTML = `
+          <div class="temperature">${temp}°C</div>
+          <div class="description">${desc}</div>
+          <div class="city">${name}</div>
+        `;
+      })
+      .catch(error => {
+        result.innerHTML = "City not found. Try again.";
+      });
+  }
+</script>
+
+</body>
+</html>
